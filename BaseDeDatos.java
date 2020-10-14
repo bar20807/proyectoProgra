@@ -11,12 +11,12 @@ import java.util.ArrayList;
 public class BaseDeDatos {
 	
 	private String usuario;
-	private String contraseña;
+	private String contraseÃ±a;
 	
 	public BaseDeDatos() {
 		
 		usuario="";
-		contraseña="";
+		contraseÃ±a="";
 		
 	}
 	
@@ -30,14 +30,50 @@ public class BaseDeDatos {
 		return usuario;
 		
 	}
-	public void setContraseña(String contraseña) {
+	public void setContraseÃ±a(String contraseÃ±a) {
 		
-		this.contraseña=contraseña;
+		this.contraseÃ±a=contraseÃ±a;
 		
 	}
-	public String getContraseña() {
+	public String getContraseÃ±a() {
 		
-		return contraseña;
+		return contraseÃ±a;
+		
+	}
+	
+	public Connection conexionBaseDatosRegistrar(String Usuario , String ContraseÃ±a) {
+		
+		Connection conecion=null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			conecion= DriverManager.getConnection("jdbc:mysql://localhost:3306/fmathdatabase", "root", "Lolo1234");
+			
+			
+			String query="INSERT INTO usuarios (Usuario,Clave) values('"+Usuario+"','"+ContraseÃ±a+"')";
+			
+			Statement stm =conecion.createStatement();
+			
+			stm.executeUpdate(query);
+			
+			JOptionPane.showMessageDialog(null, "Â¡Tarea compleatada con exito!");
+			
+		} catch (ClassNotFoundException e) {
+			
+			JOptionPane.showMessageDialog(null, "Â¡Error al cargar el controlador!");
+			
+			e.printStackTrace();
+		}
+		catch (SQLException e) {
+			
+			JOptionPane.showMessageDialog(null, "Â¡Error de Conexion!");
+			
+			e.printStackTrace();
+			
+		}
+		
+		return conecion;
 		
 	}
 	
