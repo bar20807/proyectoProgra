@@ -19,13 +19,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 
-public class InterfazDeUsuarioContraseña extends JFrame {
+public class InterfazDeUsuarioContraseÃ±a extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private BaseDeDatos inicio;
 	private JFrame frmInicio;
-	private JPasswordField Contraseña;
+	private JPasswordField ContraseÃ±a;
 
 	/**
 	 * Launch the application.
@@ -34,7 +34,7 @@ public class InterfazDeUsuarioContraseña extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				
-			InterfazDeUsuarioContraseña frame = new InterfazDeUsuarioContraseña();
+			InterfazDeUsuarioContraseÃ±a frame = new InterfazDeUsuarioContraseÃ±a();
 			frame.setVisible(true);
 				
 			}
@@ -45,7 +45,7 @@ public class InterfazDeUsuarioContraseña extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InterfazDeUsuarioContraseña() {
+	public InterfazDeUsuarioContraseÃ±a() {
 		inicio=new BaseDeDatos();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 340, 375);
@@ -75,28 +75,60 @@ public class InterfazDeUsuarioContraseña extends JFrame {
 		lblUsuario1.setBounds(44, 71, 105, 31);
 		panel.add(lblUsuario1);
 		
-		JLabel lblContraseña = new JLabel("Contrase\u00F1a:");
-		lblContraseña.setFont(new Font("Segoe UI Symbol", Font.ITALIC, 24));
-		lblContraseña.setBounds(17, 130, 132, 35);
-		panel.add(lblContraseña);
+		JLabel lblContraseÃ±a = new JLabel("Contrase\u00F1a:");
+		lblContraseÃ±a.setFont(new Font("Segoe UI Symbol", Font.ITALIC, 24));
+		lblContraseÃ±a.setBounds(17, 130, 132, 35);
+		panel.add(lblContraseÃ±a);
 		
 		Button btnIngresar = new Button("Ingresar");
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				Connection conecion=null;
 				
-					if(txtUsuario.getText().equals(inicio.getUsuario()) && Contraseña.getText().equalsIgnoreCase(inicio.getContraseña())) {
-						
-						FMath window = new FMath();
-						window.setVisible(true);
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
 					
+					conecion= DriverManager.getConnection("jdbc:mysql://localhost:3306/fmathdatabase", "root", "Lolo1234");
+
+					Statement stm = conecion.createStatement();
+					
+					PreparedStatement ps = conecion.prepareStatement("select * from usuarios");
+					ResultSet rs = ps.executeQuery();
+					
+					boolean i=rs.next(),salir=false;
+
+					
+					while (i && !salir)
+					{
+						if(rs.getString(2).equals(txtUsuario.getText()) && rs.getString(3).equals(txtContra.getText())) {
+							
+							System.out.println("Â¡Sesion iniciada con exito!");
+							salir=true;
+							
+						}
+						else {
+							
+							System.out.println("Usuario o contraseÃ±a incorrectos");
+							salir=true;
+						}
 						
 					}
-					else {
-						
-						JOptionPane.showMessageDialog(null, "Usuario y Contraseña incorrectos...");
-						
-					}
+					
+				} catch (ClassNotFoundException e) {
+					
+					JOptionPane.showMessageDialog(null, "Â¡Error al cargar el controlador!");
+					
+					e.printStackTrace();
+				}
+				catch (SQLException e) {
+					
+					JOptionPane.showMessageDialog(null, "Â¡Error de Conexion!");
+					
+					e.printStackTrace();
+					
+				}
+				
 					
 					
 				
@@ -110,8 +142,7 @@ public class InterfazDeUsuarioContraseña extends JFrame {
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				inicio.setUsuario(txtUsuario.getText());
-				inicio.setContraseña(Contraseña.getText());
+				inicio.conexionBaseDatosRegistrar(txtUsuario.getText(), txtContra.getText()); 
 				
 			}
 			
@@ -121,9 +152,9 @@ public class InterfazDeUsuarioContraseña extends JFrame {
 		btnRegistrarse.setBounds(159, 210, 105, 31);
 		panel.add(btnRegistrarse);
 		
-		Contraseña = new JPasswordField();
-		Contraseña.setBounds(159, 143, 105, 20);
-		panel.add(Contraseña);
+		ContraseÃ±a = new JPasswordField();
+		ContraseÃ±a.setBounds(159, 143, 105, 20);
+		panel.add(ContraseÃ±a);
 		
 		
 	}
